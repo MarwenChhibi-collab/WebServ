@@ -1,0 +1,112 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = "mysql://root@localhost:3306/healthina"
+}
+
+model User {
+    id            Int            @id @default(autoincrement())
+    email         String         @unique
+    ROLE          Role
+    name          String?
+    likes         Like[]
+    Comments      Comment[]
+    SavedRecipies SavedRecipe[]
+    RatingRecipes RatingRecipe[]
+}
+
+model Article {
+    id        Int       @id @default(autoincrement())
+    createdAt DateTime  @default(now())
+    title     String
+    body      String
+    likes     Like[]
+    Comments  Comment[]
+}
+
+model Recipe {
+    id              Int            @id @default(autoincrement())
+    createdAt       DateTime       @default(now())
+    title           String
+    author          String
+    Category        RecipeCategory
+    preparationTime Int
+    numberPerson    Int
+    body            String
+    tip             String
+    Steps           Step[]
+    UserRecipe      SavedRecipe[]
+    RatingRecipe    RatingRecipe[]
+}
+
+model Step {
+    id       Int    @id @default(autoincrement())
+    body     String
+    recipeId Int
+    Recipe   Recipe @relation(fields: [recipeId], references: [id])
+}
+
+model SavedRecipe {
+    id       Int    @id @default(autoincrement())
+    userId   Int
+    User     User   @relation(fields: [userId], references: [id])
+    recipeId Int
+    Recipe   Recipe @relation(fields: [recipeId], references: [id])
+}
+
+model RatingRecipe {
+    id       Int    @id @default(autoincrement())
+    userId   Int
+    User     User   @relation(fields: [userId], references: [id])
+    recipeId Int
+    Recipe   Recipe @relation(fields: [recipeId], references: [id])
+    Value    Int
+}
+
+model Adress {
+    id            Int      @id @default(autoincrement())
+    createdAt     DateTime @default(now())
+    name          String
+    localisation  String //name : Ariena, Carthage ...
+    mapsLink      String //maps link
+    facebookLink  String
+    instagramLink String
+}
+
+model WebAdress {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    hyperLink String
+}
+
+model Like {
+    id        Int      @id @default(autoincrement())
+    articleId Int?
+    Article   Article? @relation(fields: [articleId], references: [id])
+    userId    Int
+    User      User     @relation(fields: [userId], references: [id])
+}
+
+model Comment {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    articleId Int?
+    Article   Article? @relation(fields: [articleId], references: [id])
+    userId    Int
+    User      User     @relation(fields: [userId], references: [id])
+    body      String
+}
+
+enum RecipeCategory {
+    VEGETARIAN
+    GLUTENFREE
+    PLANTB
+}
+
+enum Role {
+    ADMIN
+    MEMBRE
+}
