@@ -1,8 +1,6 @@
 const express = require('express');
 var bodyParser = require('body-parser')
 const app = express();
-const swaggerUi = require('swagger-ui-express');
-swaggerDocument = require('./swagger.json');
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 var jsonParser = bodyParser.json()
@@ -467,7 +465,6 @@ app.delete('/comments/:id', async (req, res) => {
 })
 //#endregion comment
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
 	console.log(`Server listening on port ${PORT}...`);
